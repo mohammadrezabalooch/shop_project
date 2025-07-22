@@ -1,0 +1,10 @@
+{% extends "_base.html" %}
+
+{% block title %}{{product.name}}{% endblock title %}
+
+{% block content %}
+<p>{{product.name}}</p>
+<p>توضیحات:{{product.description}}</p>
+<p>دسته بندی:{{product.category}}</p>
+<p>{{product.price}}T</p>
+{% endblock content %}

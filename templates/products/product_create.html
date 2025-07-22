@@ -1,0 +1,10 @@
+{% extends "_base.html" %}
+{% block title %}محصول جدید{% endblock title %}
+{% block content %}
+<h3>افزودن محصول جدید</h3>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">افزودن</button>
+</form>
+{% endblock content %}
