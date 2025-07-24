@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+{% block titlt %}سبدخرید{% endblock titlt %}
+{% block content %}
+<table>
+    <tr>
+        <th>نام محصول</th>
+        <th>تعداد</th>
+        <th>قیمت مجموع</th>
+    </tr>
+    {% for item in cart.items %}
+        <tr>
+            <td>{{item.item.name}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.item_total_price}}</td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td>جمع کل</td>
+        <td>{{cart.cart_total_price}}</td>
+    </tr>
+</table>
+{% endblock content %}

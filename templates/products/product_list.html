@@ -8,6 +8,7 @@
 <p>توضیحات:{{product.description}}</p>
 <p>دسته بندی:{{product.category}}</p>
 <p>{{product.price}}T</p>
+<button type="submit" action="{% url 'cartadd' product.pk %}"></button>
 <br><br>
 {% endfor %}
 {% endblock content %}
