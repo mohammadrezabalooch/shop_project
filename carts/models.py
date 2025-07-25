@@ -13,14 +13,15 @@ class Cart(models.Model):
 
     def cart_total_price(self):
         total = 0
-        for item in self.items.objects.all():
-            total += item.quantity * item.price
+        for item in self.items.all():
+            # total += item.quantity * item.item.price
+            total += item.item_total_price()
         return total
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, related_name="items")
-    item = models.ForeignKey("products.Product")
+    cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
+    item = models.ForeignKey("products.Product", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def item_total_price(self):

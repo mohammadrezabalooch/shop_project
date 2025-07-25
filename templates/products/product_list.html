@@ -8,7 +8,10 @@
 <p>توضیحات:{{product.description}}</p>
 <p>دسته بندی:{{product.category}}</p>
 <p>{{product.price}}T</p>
-<button type="submit" action="{% url 'cartadd' product.pk %}"></button>
+<form action="{% url 'cartadd' product.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit">افزودن به سبد خرید</button>
+</form>
 <br><br>
 {% endfor %}
 {% endblock content %}

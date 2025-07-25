@@ -17,7 +17,7 @@ class AddToCartView(LoginRequiredMixin, View):
             cart_item.quantity += 1
             cart_item.save()
 
-        return redirect("productdetail")
+        return redirect("productlist")
 
 
 class RemoveFromCartView(LoginRequiredMixin, View):
@@ -38,6 +38,6 @@ class CartDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cart = Cart.objects.get_or_create(user=self.request.user)
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
         context["cart"] = cart
         return context
