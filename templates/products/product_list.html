@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load cart_tags %}
 
 {% block title %}لیست محصولات{% endblock title %}
 
@@ -12,6 +13,17 @@
     {% csrf_token %}
     <button type="submit">افزودن به سبد خرید</button>
 </form>
+{% if user.is_authenticated %}
+    {% get_cart_item user.cart product as cart_item %}
+    {% if cart_item %}
+        <p>تعداد در سبد: {{ cart_item.quantity }}</p>
+        <form action="{% url 'cartremove' product.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit">حذف از سبد</button>
+        </form>
+    {% endif %}
+
+{% endif %}
 <br><br>
 {% endfor %}
 {% endblock content %}
