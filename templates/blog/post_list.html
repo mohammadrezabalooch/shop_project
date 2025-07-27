@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+{% load cart_tags %}
+
+{% block title %}لیست محصولات{% endblock title %}
+
+{% block content %}
+{% for post in post_list %}
+<p><a href="{% url 'postdetail' post.pk %}">{{post.title}}</a></p>
+<p>{{post.body}}</p>
+<p>{{post.author}}</p>
+<p>{{post.status}}</p>
+<br><br>
+{% endfor %}
+{% endblock content %}
