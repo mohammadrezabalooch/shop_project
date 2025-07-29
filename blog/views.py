@@ -22,14 +22,18 @@ class PostDetailView(UserPassesTestMixin, DetailView):
     model = Post
     template_name = "blog/post_detail.html"
 
-    # def test_func(self):
-    #     obj = self.get_object()
-    #     return obj.is_special and self.request.user.is_special
+    def test_func(self):
+        obj = self.get_object()
+        if obj.is_special:
+            return (
+                self.request.user.is_special_user() or self.request.user == obj.author
+            )
+        return True
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ("title", "body")
+    fields = ("title", "body", "is_special")
     template_name = "blog/post_create.html"
 
     def form_valid(self, form):
@@ -48,7 +52,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return obj.author == self.request.user
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = "blog/post_delete.html"
     success_url = reverse_lazy("postlist")
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user

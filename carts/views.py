@@ -11,11 +11,17 @@ class AddToCartView(LoginRequiredMixin, View):
     def post(self, request, product_id):
         cart, _ = Cart.objects.get_or_create(user=request.user)
         product = get_object_or_404(Product, id=product_id)
+        # میشه اینجا شرط گذاشت موجودی کالا چک بشه اما چون موجودی کالا عددی مثبته هرموقع صفر باشه و کاربر ادد کنه خودش ارور میده پس بهینه نیست برای اون حالت خاص هربار یه شرط بررسی بشه
         cart_item, created = CartItem.objects.get_or_create(cart=cart, item=product)
 
         if not created:
             cart_item.quantity += 1
+            # product.stock -= 1  #با signal نوشتم خودکار از موجودی کم میشه
+            # product.save()
             cart_item.save()
+        # else:
+        #     product.stock -= 1
+        #     product.save()
 
         return redirect("productlist")
 
@@ -29,6 +35,8 @@ class RemoveFromCartView(LoginRequiredMixin, View):
             cart_item.delete()
         else:
             cart_item.quantity -= 1
+            # product.stock += 1  #با signals نوشتم خودکار به تعداد موجود محصول اضافه میکنه
+            # product.save()
             cart_item.save()
         return redirect("productlist")
 

@@ -5,15 +5,19 @@
 
 {% block content %}
 {% for product in product_list %}
+
 <p><a href="{% url 'productdetail' product.pk %}">{{product.name}}</a></p>
 <p>توضیحات:{{product.description}}</p>
 <p>دسته بندی:{{product.category}}</p>
 <p>{{product.price}}T</p>
-<form action="{% url 'cartadd' product.pk %}" method="post">
+
+
+{% if user.is_authenticated %}
+    <form action="{% url 'cartadd' product.pk %}" method="post">
     {% csrf_token %}
     <button type="submit">افزودن به سبد خرید</button>
-</form>
-{% if user.is_authenticated %}
+    </form>
+    
     {% get_cart_item user.cart product as cart_item %}
     {% if cart_item %}
         <p>تعداد در سبد: {{ cart_item.quantity }}</p>
@@ -22,7 +26,11 @@
             <button type="submit">حذف از سبد</button>
         </form>
     {% endif %}
-
+{% else %}
+    <form action="{% url 'login' %}" method="get">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">برای افزودن به سبد خرید وارد شوید</button>
+    </form>
 {% endif %}
 <br><br>
 {% endfor %}

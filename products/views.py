@@ -12,7 +12,7 @@ class ProductList(ListView):
     template_name = "products/product_list.html"
 
 
-class ProductDetail(DeleteView):
+class ProductDetail(DetailView):
     model = Product
     template_name = "products/product_Detail.html"
 

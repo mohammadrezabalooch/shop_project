@@ -15,7 +15,15 @@ class CustomUserAdmin(UserAdmin):
         "username",
         "email",
         "is_superuser",
+        "is_author",
+        "is_special_user",
     ]
+    fieldsets = list(UserAdmin.fieldsets)
+    fieldsets[2][1]["fields"] = UserAdmin.fieldsets[2][1]["fields"] + (
+        "is_author",
+        "special_user",
+    )
+    fieldsets = tuple(fieldsets)
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
