@@ -128,6 +128,8 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 AUTH_USER_MODEL = "accounts.CustomUser"
-LOGIN_REDIRECT_URL = "productlist"
+# LOGIN_REDIRECT_URL = "productlist"
 LOGOUT_REDIRECT_URL = "productlist"

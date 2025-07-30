@@ -14,13 +14,14 @@ from .models import Post
 
 
 class PostListView(ListView):
-    model = Post
+    # model = Post
     template_name = "blog/post_list.html"
+    queryset = Post.objects.filter(status="p")
 
 
 class PostDetailView(UserPassesTestMixin, DetailView):
-    model = Post
     template_name = "blog/post_detail.html"
+    queryset = Post.objects.filter(status="p")
 
     def test_func(self):
         obj = self.get_object()
@@ -40,6 +41,9 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         form.instance.author = self.request.user
         form.instance.status = "d"
         return super().form_valid(form)
+
+    def test_func(self):
+        return self.request.user.is_author
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

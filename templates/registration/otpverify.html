@@ -1,0 +1,14 @@
+<h2>تایید ورود دو مرحله‌ای</h2>
+<p>کد ۵ رقمی که به ایمیل شما ارسال شد را وارد کنید.</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">تایید و ورود</button>
+</form>
+
+{% if form.errors %}
+    <div style="color: red;">
+        <p>کد وارد شده اشتباه یا منقضی شده است. لطفاً دوباره تلاش کنید.</p>
+    </div>
+{% endif %}
