@@ -3,6 +3,11 @@
 {% block title %}{{post.title}}{% endblock title %}
 
 {% block content %}
+{% comment %} {% if post in user.articles.all %} {% endcomment %}
+{% if post.author == user %}
+<a href="{% url 'postupdate' post.pk %}">اپدیت پست</a>
+<a href="{% url 'postdelete' post.pk %}">حذف پست</a>
+{% endif %}
 <p>{{post.title}}</p>
 <p>{{post.body}}</p>
 <p>نویسنده:{{post.author}}</p>

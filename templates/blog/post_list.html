@@ -7,8 +7,8 @@
 {% for post in post_list %}
 <p><a href="{% url 'postdetail' post.pk %}">{{post.title}}</a></p>
 <p>{{post.body}}</p>
-<p>{{post.author}}</p>
-<p>{{post.status}}</p>
+<p>نویسنده: {{post.author}}</p>
+<p>تاریخ: {{post.created_at}}</p>
 <br><br>
 {% endfor %}
 {% endblock content %}
