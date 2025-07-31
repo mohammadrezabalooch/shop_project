@@ -1,5 +1,4 @@
 {% extends "_base.html" %}
-{% load cart_tags %}
 
 {% block title %}لیست مقالات{% endblock title %}
 
@@ -7,7 +6,7 @@
 {% for post in post_list %}
 <p><a href="{% url 'postdetail' post.pk %}">{{post.title}}</a></p>
 <p>{{post.body}}</p>
-<p>نویسنده: {{post.author}}</p>
+<p>نویسنده: <a href="{% url 'authorlist' post.author.username %}">{{post.author}}</a></p>
 <p>تاریخ: {{post.created_at}}</p>
 <br><br>
 {% endfor %}

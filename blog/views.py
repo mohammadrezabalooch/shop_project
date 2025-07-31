@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import (
     ListView,
     DetailView,
@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Post
 from django.db.models import Q
+from django.contrib.auth import get_user_model
 
 # Create your views here.
 
@@ -75,3 +76,15 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.author == self.request.user
+
+
+class AuthorListView(ListView):
+    template_name = "blog/author.html"
+
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        author = get_object_or_404(get_user_model(), username=username)
+
+        return author.articles.filter(status="p")
+
+    context_object_name = "authorposts"

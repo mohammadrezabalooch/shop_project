@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+{% block content %}
+
+{% block title %}{% endblock title %}
+{% for post in authorposts %}
+
+<p><a href="{% url 'postdetail' post.pk %}">{{post.title}}</a></p>
+<p>{{post.body}}</p>
+<p>نویسنده: {{post.author}}</p>
+<p>تاریخ: {{post.created_at}}</p>
+<br><br>
+
+{% endfor %}
+
+{% endblock content %}
