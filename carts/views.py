@@ -22,8 +22,8 @@ class AddToCartView(LoginRequiredMixin, View):
         # else:
         #     product.stock -= 1
         #     product.save()
-
-        return redirect("productlist")
+        next_url = request.POST.get("next", "productlist")
+        return redirect(next_url)
 
 
 class RemoveFromCartView(LoginRequiredMixin, View):
@@ -38,7 +38,9 @@ class RemoveFromCartView(LoginRequiredMixin, View):
             # product.stock += 1  #با signals نوشتم خودکار به تعداد موجود محصول اضافه میکنه
             # product.save()
             cart_item.save()
-        return redirect("productlist")
+
+        next_url = request.POST.get("next", "productlist")
+        return redirect(next_url)
 
 
 class CartDetailView(LoginRequiredMixin, TemplateView):

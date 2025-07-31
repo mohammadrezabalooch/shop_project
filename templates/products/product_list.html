@@ -15,6 +15,7 @@
 {% if user.is_authenticated %}
     <form action="{% url 'cartadd' product.pk %}" method="post">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
     <button type="submit">افزودن به سبد خرید</button>
     </form>
     
@@ -23,6 +24,7 @@
         <p>تعداد در سبد: {{ cart_item.quantity }}</p>
         <form action="{% url 'cartremove' product.pk %}" method="post">
             {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
             <button type="submit">حذف از سبد</button>
         </form>
     {% endif %}

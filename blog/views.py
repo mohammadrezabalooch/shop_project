@@ -9,6 +9,7 @@ from django.views.generic import (
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Post
+from django.db.models import Q
 
 # Create your views here.
 
@@ -30,6 +31,16 @@ class PostDetailView(UserPassesTestMixin, DetailView):
                 self.request.user.is_special_user() or self.request.user == obj.author
             )
         return True
+
+
+class PostPreviewView(UserPassesTestMixin, DetailView):
+    # model = Post
+    template_name = "blog/post_detail.html"
+    queryset = Post.objects.filter(Q(status="d") | Q(status="b"))
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
 
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

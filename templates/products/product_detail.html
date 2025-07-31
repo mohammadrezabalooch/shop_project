@@ -1,4 +1,5 @@
 {% extends "_base.html" %}
+{% load cart_tags %}
 
 {% block title %}{{product.name}}{% endblock title %}
 
@@ -7,8 +8,26 @@
 <p>توضیحات:{{product.description}}</p>
 <p>دسته بندی:{{product.category}}</p>
 <p>{{product.price}}T</p>
-<form action="{% url 'cartadd' product.pk %}" method="post">
+{% if user.is_authenticated %}
+    <form action="{% url 'cartadd' product.pk %}" method="post">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
     <button type="submit">افزودن به سبد خرید</button>
-</form>
+    </form>
+    
+    {% get_cart_item user.cart product as cart_item %}
+    {% if cart_item %}
+        <p>تعداد در سبد: {{ cart_item.quantity }}</p>
+        <form action="{% url 'cartremove' product.pk %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit">حذف از سبد</button>
+        </form>
+    {% endif %}
+{% else %}
+    <form action="{% url 'login' %}" method="get">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">برای افزودن به سبد خرید وارد شوید</button>
+    </form>
+{% endif %}
 {% endblock content %}

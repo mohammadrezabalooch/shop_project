@@ -3,6 +3,10 @@
 {% block title %}{{post.title}}{% endblock title %}
 
 {% block content %}
+{% if '/preview/' in request.path %}
+    <p><strong>این یک پیش‌نمایش است.</strong></p>
+    <p>وضعیت فعلی پست: <strong>{{ post.get_status_display }}</strong></p>
+{% endif %}
 {% comment %} {% if post in user.articles.all %} {% endcomment %}
 {% if post.author == user %}
 <a href="{% url 'postupdate' post.pk %}">اپدیت پست</a>
