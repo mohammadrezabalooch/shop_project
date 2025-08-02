@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericRelation
+from comments.models import Comment
 
 # Create your models here.
 
@@ -19,6 +21,8 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True, related_name="products"
     )
+
+    comment = GenericRelation(Comment)
 
     def __str__(self):
         return self.name

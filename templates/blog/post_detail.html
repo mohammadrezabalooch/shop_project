@@ -9,10 +9,17 @@
 {% endif %}
 {% comment %} {% if post in user.articles.all %} {% endcomment %}
 {% if post.author == user %}
-<a href="{% url 'postupdate' post.pk %}">اپدیت پست</a>
-<a href="{% url 'postdelete' post.pk %}">حذف پست</a>
+<div>
+
+    <a href="{% url 'postupdate' post.pk %}">اپدیت پست</a>
+    <a href="{% url 'postdelete' post.pk %}">حذف پست</a>
+</div>
 {% endif %}
 <p>{{post.title}}</p>
+<p style="text-align: right;">
+    <img src="{{post.image.url}}" alt="{{post.title}}" width="400">
+</p>
+
 <p>{{post.body}}</p>
 <p>نویسنده:{{post.author}}</p>
 {% endblock content %}

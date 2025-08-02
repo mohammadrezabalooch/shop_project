@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "products.apps.ProductsConfig",
     "carts.apps.CartsConfig",
     "blog.apps.BlogConfig",
+    "comments.apps.CommentsConfig",
 ]
 
 MIDDLEWARE = [
@@ -123,6 +124,9 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = str(BASE_DIR.joinpath("media"))
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
