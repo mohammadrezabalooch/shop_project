@@ -21,6 +21,9 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True, related_name="products"
     )
+    image = models.ImageField(
+        upload_to="productimages/%Y/%m/%d/", null=True, blank=True
+    )
 
     comments = GenericRelation(Comment)
 
