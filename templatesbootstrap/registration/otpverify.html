@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}تایید دو مرحله‌ای{% endblock title %}
+
+{% block content %}
+
+
+<div class="container mt-5 otp-container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-header">
+                    <h3 class="mb-0">تایید ورود دو مرحله‌ای</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">کد ۵ رقمی که به ایمیل شما ارسال شد را وارد کنید.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+
+                        {# نمایش خطاها با استایل بوت‌استرپ #}
+                        {% if form.errors %}
+                            <div class="alert alert-danger mt-3 py-2">
+                                <small>کد وارد شده اشتباه یا منقضی شده است.</small>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary">تایید و ورود</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

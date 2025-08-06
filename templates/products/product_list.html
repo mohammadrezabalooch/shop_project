@@ -4,68 +4,75 @@
 {% block title %}لیست محصولات{% endblock title %}
 
 {% block content %}
+<div class='container'>
 
-<form action="{% url 'productsearch' %}">
-    <input type="text" name="q">
-    <button type="submit">جستجو</button>
-</form>
-<br>
-
-{% for product in product_list %}
-<p>
-    <img src="{{post.image.url}}" alt="{{post.title}}" width="200">
-</p>
-<p><a href="{% url 'productdetail' product.pk %}">{{product.name}}</a></p>
-<p>توضیحات:{{product.description}}</p>
-<p>دسته بندی:{{product.category}}</p>
-<p>{{product.price}}T</p>
-
-
-{% if user.is_authenticated %}
+    <div class="row justify-content-center mb-5">
+        <div class='col-8'>
+            <form action="{% url 'productsearch' %}" class='input-group'>
+                <input type="text" name="q" class='form-control' placeholder='به دنبال چه محصولی هستید؟'>
+                <button type="submit" class='btn btn-primary'>جستجو</button>
+            </form>
+        </div>
+    </div>
+    
+    {% for product in product_list %}
+    {% if product.image %}
+    <p>
+        <img src="{{product.image.url}}" alt="{{product.title}}" width="400">
+    </p>
+    {% endif %}
+    <p><a href="{% url 'productdetail' product.pk %}">{{product.name}}</a></p>
+    <p>توضیحات:{{product.description}}</p>
+    <p>دسته بندی:{{product.category}}</p>
+    <p>{{product.price}}T</p>
+    
+    
+    {% if user.is_authenticated %}
     <form action="{% url 'cartadd' product.pk %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ request.path }}">
-    <button type="submit">افزودن به سبد خرید</button>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">افزودن به سبد خرید</button>
     </form>
     
     {% get_cart_item user.cart product as cart_item %}
     {% if cart_item %}
-        <p>تعداد در سبد: {{ cart_item.quantity }}</p>
-        <form action="{% url 'cartremove' product.pk %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit">حذف از سبد</button>
-        </form>
+    <p>تعداد در سبد: {{ cart_item.quantity }}</p>
+    <form action="{% url 'cartremove' product.pk %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">حذف از سبد</button>
+    </form>
     {% endif %}
-{% else %}
+    {% else %}
     <form action="{% url 'login' %}" method="get">
         <input type="hidden" name="next" value="{{ request.path }}">
         <button type="submit">برای افزودن به سبد خرید وارد شوید</button>
     </form>
-{% endif %}
-<br><br>
-{% endfor %}
-
-{% for post in page_obj %}
+    {% endif %}
+    <br><br>
+    {% endfor %}
+    
+    {% for post in page_obj %}
     <p>{{ post.title }}</p>
-{% endfor %}
-
-<div>
-    <span>
-        {% if page_obj.has_previous %}
+    {% endfor %}
+    
+    <div>
+        <span>
+            {% if page_obj.has_previous %}
             <a href="?page=1">&laquo; اولین</a>
             <a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
-        {% endif %}
-
-        <span>
-            صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}.
+            {% endif %}
+            
+            <span>
+                صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}.
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">آخرین &raquo;</a>
+        <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">آخرین &raquo;</a>
         {% endif %}
     </span>
 </div>
 
+</div>
 {% endblock content %}

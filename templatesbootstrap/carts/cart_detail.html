@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+{% load humanize %}
+
+{% block titlt %}سبدخرید{% endblock titlt %}
+{% block content %}
+    <style>
+        /* استایل برای کل جدول */
+        table {
+            /* این خط حاشیه‌های دوتایی را به تک خط تبدیل می‌کند */
+            border-collapse: collapse;
+            width: 80%; /* عرض جدول */
+            margin: 20px auto; /* جدول را در وسط صفحه قرار می‌دهد */
+            font-family: sans-serif; /* فونت خوانا */
+        }
+
+        /* استایل برای تمام سلول‌ها (هم هدر و هم معمولی) */
+        th, td {
+            /* ۱. اضافه کردن خطوط حاشیه */
+            border: 1px solid #dddddd;
+
+            /* ۲. وسط‌چین کردن محتوا */
+            text-align: center; /* وسط‌چین افقی */
+            vertical-align: middle; /* وسط‌چین عمودی */
+
+            padding: 12px; /* ایجاد فاصله داخلی برای خوانایی بهتر */
+        }
+
+        /* استایل مخصوص برای سلول‌های هدر */
+        th {
+            background-color: #f2f2f2; /* رنگ پس‌زمینه هدر */
+            font-weight: bold;
+        }
+    </style>
+<h2>{{cart}}</h2>
+<table dir="rtl">
+    <tr>
+        <th>نام محصول</th>
+        <th>تعداد</th>
+        <th>قیمت مجموع</th>
+    </tr>
+    {% for item in cart.items.all %}
+        <tr>
+            <td>{{item.item.name}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.item_total_price|intcomma}}</td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="2">جمع کل</td>
+        <td>{{cart.cart_total_price|intcomma}}</td>
+    </tr>
+</table>
+{% endblock content %}

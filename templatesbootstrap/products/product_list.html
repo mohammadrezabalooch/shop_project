@@ -1,0 +1,121 @@
+{% extends "_base.html" %}
+{% load cart_tags %}
+
+{% block title %}لیست محصولات{% endblock title %}
+
+{% block content %}
+<div class='container mt-4'>
+
+    {# بخش فرم جستجو - بدون تغییر در منطق #}
+    <div class="row justify-content-center mb-5">
+        <div class='col-md-8 col-lg-6'>
+            <form action="{% url 'productsearch' %}" class='input-group'>
+                <input type="text" name="q" class='form-control' placeholder='به دنبال چه محصولی هستید؟'>
+                <button type="submit" class='btn btn-primary'>جستجو</button>
+            </form>
+        </div>
+    </div>
+
+    {# شروع گرید نمایش محصولات #}
+    <div class="row">
+        {% for product in page_obj %} {# استفاده از page_obj برای سازگاری با صفحه‌بندی #}
+        <div class="col-lg-4 col-md-4 col-sm-6 mb-4 d-flex align-items-stretch">
+            <div class="card w-100 shadow-sm">
+                
+                {# بخش تصویر محصول #}
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+                    {# عنوان و دسته‌بندی محصول #}
+                    <a href="{% url 'productdetail' product.pk %}" class="text-dark text-decoration-none">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                    </a>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ product.category }}</h6>
+                    
+                    {# توضیحات محصول با خلاصه‌سازی #}
+                    <p class="card-text flex-grow-1">{{ product.description|truncatewords:15 }}</p>
+
+                    {# قیمت محصول #}
+                    <p class="fs-5 fw-bold text-end mb-3">{{ product.price }} تومان</p>
+
+                    {# بخش دکمه‌های سبد خرید در انتهای کارت #}
+                    <div class="mt-auto">
+                        {% if user.is_authenticated %}
+                            {% get_cart_item user.cart product as cart_item %}
+                            
+                            {% if cart_item %}
+                                {# اگر محصول در سبد بود، دکمه‌های کم و زیاد کردن نمایش داده می‌شود #}
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <form action="{% url 'cartremove' product.pk %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">حذف از سبد</button>
+                                    </form>
+                                    <span class="fw-bold">تعداد: {{ cart_item.quantity }}</span>
+                                    <form action="{% url 'cartadd' product.pk %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <button type="submit" class="btn btn-primary btn-sm">افزودن یکی دیگر</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                {# اگر محصول در سبد نبود، دکمه افزودن نمایش داده می‌شود #}
+                                <form action="{% url 'cartadd' product.pk %}" method="post" class="d-grid">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button type="submit" class="btn btn-primary">افزودن به سبد خرید</button>
+                                </form>
+                            {% endif %}
+
+                        {% else %}
+                            {# اگر کاربر وارد نشده بود #}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-secondary w-100">
+                                برای خرید وارد شوید
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="alert alert-warning text-center">متاسفانه محصولی یافت نشد.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# بخش صفحه‌بندی (Pagination) با استایل بوت‌استرپ #}
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; اولین</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">قبلی</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo; اولین</span></li>
+                <li class="page-item disabled"><span class="page-link">قبلی</span></li>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">بعدی</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">آخرین &raquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">بعدی</span></li>
+                <li class="page-item disabled"><span class="page-link">آخرین &raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+</div>
+{% endblock content %}

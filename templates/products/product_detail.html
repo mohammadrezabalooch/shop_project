@@ -4,6 +4,11 @@
 {% block title %}{{product.name}}{% endblock title %}
 
 {% block content %}
+{% if product.image %}
+<p style="text-align: right;">
+    <img src="{{product.image.url}}" alt="{{product.title}}" width="400">
+</p>
+{% endif %}
 <p>{{product.name}}</p>
 <p>توضیحات:{{product.description}}</p>
 <p>دسته بندی:{{product.category}}</p>

@@ -1,0 +1,42 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}حذف پست{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card text-center shadow-lg border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">تایید عملیات حذف</h4>
+                </div>
+                <div class="card-body">
+                    <p class="fs-5">آیا از حذف پست زیر مطمئن هستید؟</p>
+                    
+                    {# نمایش عنوان پستی که قرار است حذف شود #}
+                    <h2 class="my-3 fst-italic">"{{ post.title }}"</h2>
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <strong>توجه:</strong> این عمل غیرقابل بازگشت است!
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{form|crispy}}
+                        {# در فرم‌های حذف معمولا فیلد قابل مشاهده‌ای وجود ندارد #}
+
+                        <div class="d-flex justify-content-center mt-4">
+                            {# دکمه تایید حذف با رنگ قرمز برای هشدار #}
+                            <button type="submit" class="btn btn-danger mx-2">بله، حذف کن</button>
+                            
+                            {# دکمه انصراف و بازگشت به صفحه جزئیات پست #}
+                            <a href="{% url 'postdetail' post.pk %}" class="btn btn-secondary mx-2">خیر، انصراف</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

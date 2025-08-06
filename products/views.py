@@ -36,7 +36,7 @@ class ProductCreateView(CreateView):
 class ProductUpdateView(UpdateView):
     model = Product
     template_name = "products/product_update.html"
-    fields = ("name", "price", "category", "description")
+    fields = ("name", "price", "category", "description", "image")
 
 
 class ProductDeleteView(DeleteView):

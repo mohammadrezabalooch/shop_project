@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}ثبت نام{% endblock title %}
+
+{% block content %}
+
+
+
+<div class="container mt-5 signup-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header text-center">
+                    <h3 class="mb-0">ثبت نام کاربر جدید</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success">ایجاد حساب کاربری</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small>قبلاً ثبت‌نام کرده‌اید؟ <a href="{% url 'login' %}">وارد شوید</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # third-party apps
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "django.contrib.humanize",
     # local apps
     "accounts.apps.AccountsConfig",
     "products.apps.ProductsConfig",
@@ -61,7 +64,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.joinpath("templates")],
+        "DIRS": [BASE_DIR.joinpath("templatesbootstrap")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -137,3 +140,6 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 AUTH_USER_MODEL = "accounts.CustomUser"
 # LOGIN_REDIRECT_URL = "productlist"
 LOGOUT_REDIRECT_URL = "productlist"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

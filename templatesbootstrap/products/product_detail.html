@@ -1,0 +1,105 @@
+{% extends "_base.html" %}
+{% load cart_tags %}
+
+{% block title %}{{ product.name }}{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        {# ستون سمت راست: تصویر محصول #}
+        <div class="col-md-6">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm w-100">
+            {% else %}
+                <img src="https://via.placeholder.com/600x400.png?text=No+Image" alt="No image available" class="img-fluid rounded shadow-sm w-100">
+            {% endif %}
+        </div>
+
+        {# ستون سمت چپ: اطلاعات و دکمه‌های محصول #}
+        <div class="col-md-6 d-flex flex-column">
+            {# نام محصول #}
+            <h1 class="display-5">{{ product.name }}</h1>
+
+            {# دسته‌بندی محصول به صورت بج #}
+            <h5><span class="badge bg-secondary">{{ product.category }}</span></h5>
+
+            {# توضیحات محصول #}
+            <p class="lead mt-3">{{ product.description }}</p>
+
+            {# قیمت محصول #}
+            <p class="fs-2 fw-bold text-primary my-3">{{ product.price }} تومان</p>
+
+            {# بخش دکمه‌های سبد خرید #}
+            <div class="card bg-light p-3 mt-auto">
+                {% if user.is_authenticated %}
+                    {% get_cart_item user.cart product as cart_item %}
+                    {% if cart_item %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <form action="{% url 'cartremove' product.pk %}" method="post" class="w-100 me-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button type="submit" class="btn btn-outline-danger w-100">حذف از سبد</button>
+                            </form>
+                            <form action="{% url 'cartadd' product.pk %}" method="post" class="w-100 ms-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button type="submit" class="btn btn-primary w-100">افزودن یکی دیگر ({{ cart_item.quantity }})</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <form action="{% url 'cartadd' product.pk %}" method="post" class="d-grid">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button type="submit" class="btn btn-primary btn-lg">افزودن به سبد خرید</button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-secondary btn-lg">
+                        برای افزودن به سبد خرید وارد شوید
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    {# بخش نظرات #}
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {# فرم افزودن نظر #}
+            <div class="card shadow-sm mb-5">
+                <div class="card-body">
+                    <h3 class="card-title">نظر خود را بنویسید</h3>
+                    <form action="{% url 'commentadd' %}" method="post">
+                        {% csrf_token %}
+                        
+                        {# راه بهتر: استفاده از crispy-forms یا رندر دستی فیلدها با کلاس form-control #}
+                        {{ comment_form }} 
+
+                        <input type="hidden" name="content_type_id" value="{{ content_type_id }}">
+                        <input type="hidden" name="object_id" value="{{ product.pk }}">
+                        <button type="submit" class="btn btn-success mt-3">ارسال نظر</button>
+                    </form>
+                </div>
+            </div>
+
+            {# لیست نظرات تایید شده #}
+            <h3 class="mb-4">نظرات کاربران</h3>
+            {% for comment in product.approved_comments %}
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0">
+                        
+                    </div>
+                    <div class="ms-3 p-3 bg-light rounded w-100">
+                        <div class="fw-bold">{{ comment.author.username }}</div>
+                        <p class="mb-0 mt-1">{{ comment.body }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="alert alert-info">هنوز نظری برای این محصول ثبت نشده است. شما اولین نفر باشید!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

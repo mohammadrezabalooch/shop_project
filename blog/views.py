@@ -71,7 +71,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     template_name = "blog/post_update.html"
-    fields = ("title", "body")
+    fields = ("title", "body", "image")
 
     def test_func(self):
         obj = self.get_object()

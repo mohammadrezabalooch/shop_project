@@ -1,0 +1,86 @@
+{% extends "_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ post.title }}{% endblock title %}
+
+{% block content %}
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            {# بخش هشدارهای بالای پست #}
+            {% if '/preview/' in request.path %}
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">این یک پیش‌نمایش است</h4>
+                    <p>این پست هنوز منتشر نشده و فقط برای شما قابل مشاهده است. وضعیت فعلی: <strong>{{ post.get_status_display }}</strong></p>
+                </div>
+            {% endif %}
+
+            {# دکمه‌های مدیریت پست برای نویسنده #}
+            {% if post.author == user %}
+                <div class="text-end mb-3">
+                    <a href="{% url 'postupdate' post.pk %}" class="btn btn-sm btn-outline-secondary">ویرایش پست</a>
+                    <a href="{% url 'postdelete' post.pk %}" class="btn btn-sm btn-outline-danger">حذف پست</a>
+                </div>
+            {% endif %}
+
+            {# بدنه اصلی مقاله #}
+            <article>
+                <header class="mb-4">
+                    <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+                    <div class="text-muted fst-italic mb-2">
+                        نوشته شده در {{ post.created_at|date:"d F Y" }} توسط <a href="{% url 'authorlist' post.author.username %}">{{ post.author }}</a>
+                    </div>
+                </header>
+
+                {% if post.image %}
+                    <figure class="mb-4">
+                        <img class="img-fluid rounded" src="{{ post.image.url }}" alt="{{ post.title }}">
+                    </figure>
+                {% endif %}
+
+                <section class="mb-5 fs-5">
+                    {{ post.body|linebreaks }}
+                </section>
+            </article>
+
+            <hr>
+
+            <section class="mb-5">
+                <div class="card bg-light shadow-sm">
+                    <div class="card-body comment-form-container">
+                        <h4 class="mb-3">نظر خود را بنویسید</h4>
+                        <form class="mb-4" action="{% url 'commentadd' %}" method="post">
+                            {% csrf_token %}
+                            
+                            {# فرم شما بدون تغییر باقی می‌ماند #}
+                            {{ comment_form|crispy }}
+                            
+                            <input type="hidden" name="content_type_id" value="{{ content_type_id }}">
+                            <input type="hidden" name="object_id" value="{{ post.id }}">
+                            <button type="submit" class="btn btn-success mt-2">ارسال نظر</button>
+                        </form>
+
+                        <h4 class="mb-3">نظرات ({{ post.approved_comments.count }})</h4>
+                        {% for comment in post.approved_comments %}
+                            <div class="d-flex mb-4">
+                                <div class="flex-shrink-0">
+                                    
+                                </div>
+                                <div class="ms-3">
+                                    <div class="fw-bold">{{ comment.author.username }}</div>
+                                    {{ comment.body }}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p>هنوز نظری ثبت نشده است. اولین نفر باشید!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock content %}
