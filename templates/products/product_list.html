@@ -12,7 +12,9 @@
 <br>
 
 {% for product in product_list %}
-
+<p>
+    <img src="{{post.image.url}}" alt="{{post.title}}" width="200">
+</p>
 <p><a href="{% url 'productdetail' product.pk %}">{{product.name}}</a></p>
 <p>توضیحات:{{product.description}}</p>
 <p>دسته بندی:{{product.category}}</p>
