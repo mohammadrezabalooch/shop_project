@@ -7,7 +7,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL)
+    author = models.ForeignKey(get_user_model(), null=True, on_delete=models.SET_NULL)
     body = models.TextField()
     is_approved = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -22,7 +22,10 @@ class Product(models.Model):
         Category, on_delete=models.SET_NULL, null=True, related_name="products"
     )
 
-    comment = GenericRelation(Comment)
+    comments = GenericRelation(Comment)
+
+    def approved_comments(self):
+        return self.comments.filter(is_approved=True)
 
     def __str__(self):
         return self.name

@@ -30,4 +30,21 @@
         <button type="submit">برای افزودن به سبد خرید وارد شوید</button>
     </form>
 {% endif %}
+
+<h2>افزودن کامنت</h2>
+    <form action="{% url 'commentadd' %}" method="post">
+        {% csrf_token %}
+        {{comment_form}}
+
+        <input type="hidden" name="content_type_id" value="{{content_type_id}}">
+        <input type="hidden" name="object_id" value="{{product.pk}}">
+        <button type="submit">ارسال</button>
+
+    </form>
+<h2>کامنت ها</h2>
+{% for comment in product.approved_comments %}
+    <p>کاربر{{comment.author.username}}: {{comment.body}}</p>
+    <br>
+{% endfor %}
+
 {% endblock content %}

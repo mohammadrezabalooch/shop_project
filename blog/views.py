@@ -11,12 +11,15 @@ from django.urls import reverse_lazy
 from .models import Post
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from comments.forms import CommentForm
+from django.contrib.contenttypes.models import ContentType
 
 # Create your views here.
 
 
 class PostListView(ListView):
     # model = Post
+    paginate_by = 3
     template_name = "blog/post_list.html"
     queryset = Post.objects.filter(status="p")
 
@@ -32,6 +35,13 @@ class PostDetailView(UserPassesTestMixin, DetailView):
                 self.request.user.is_special_user() or self.request.user == obj.author
             )
         return True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context["comment_form"] = CommentForm()
+        context["content_type_id"] = ContentType.objects.get_for_model(post).pk
+        return context
 
 
 class PostPreviewView(UserPassesTestMixin, DetailView):
@@ -80,6 +90,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class AuthorListView(ListView):
     template_name = "blog/author.html"
+    paginate_by = 3
 
     def get_queryset(self):
         username = self.kwargs.get("username")

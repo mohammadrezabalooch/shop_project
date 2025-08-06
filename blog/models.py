@@ -28,7 +28,11 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="postimages/%Y/%m/%d/", null=True, blank=True)
 
-    comment = GenericRelation(Comment)
+    comments = GenericRelation(Comment)
+
+    @property
+    def approved_comments(self):
+        return self.comments.filter(is_approved=True)
 
     def get_absolute_url(self):
         return reverse("postdetail", kwargs={"pk": self.pk})

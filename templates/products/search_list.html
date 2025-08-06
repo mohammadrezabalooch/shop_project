@@ -1,16 +1,11 @@
 {% extends "_base.html" %}
 {% load cart_tags %}
 
-{% block title %}لیست محصولات{% endblock title %}
+{% block title %}لیست محصولات جستجو شده{% endblock title %}
 
 {% block content %}
-
-<form action="{% url 'productsearch' %}">
-    <input type="text" name="q">
-    <button type="submit">جستجو</button>
-</form>
+<h2>نتایج جستجو:</h2>
 <br>
-
 {% for product in product_list %}
 
 <p><a href="{% url 'productdetail' product.pk %}">{{product.name}}</a></p>
@@ -22,7 +17,7 @@
 {% if user.is_authenticated %}
     <form action="{% url 'cartadd' product.pk %}" method="post">
     {% csrf_token %}
-    <input type="hidden" name="next" value="{{ request.path }}">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
     <button type="submit">افزودن به سبد خرید</button>
     </form>
     
@@ -31,39 +26,17 @@
         <p>تعداد در سبد: {{ cart_item.quantity }}</p>
         <form action="{% url 'cartremove' product.pk %}" method="post">
             {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
             <button type="submit">حذف از سبد</button>
         </form>
     {% endif %}
 {% else %}
     <form action="{% url 'login' %}" method="get">
-        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
         <button type="submit">برای افزودن به سبد خرید وارد شوید</button>
     </form>
 {% endif %}
 <br><br>
 {% endfor %}
-
-{% for post in page_obj %}
-    <p>{{ post.title }}</p>
-{% endfor %}
-
-<div>
-    <span>
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; اولین</a>
-            <a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
-        {% endif %}
-
-        <span>
-            صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">آخرین &raquo;</a>
-        {% endif %}
-    </span>
-</div>
 
 {% endblock content %}

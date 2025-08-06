@@ -22,5 +22,7 @@ class AddComment(CreateView):
         new_comment.content_object = obj
         new_comment.save()
 
+        return super().form_valid(form)
+
     def get_success_url(self):
         return self.object.content_object.get_absolute_url()
