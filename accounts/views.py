@@ -29,7 +29,7 @@ class CustomLoginView(LoginView):
         OTPCode.objects.create(user=user, code=str(code))
 
         send_mail(
-            "کد ورود به وبسایت فزوشگاه",
+            "کد ورود به وبسایت فروشگاه",
             f"کد ورود کاربر {user.username} {code} میباشد.",
             "sstthh@gmail.com",
             [user.email],

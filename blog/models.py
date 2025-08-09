@@ -30,7 +30,6 @@ class Post(models.Model):
 
     comments = GenericRelation(Comment)
 
-    @property
     def approved_comments(self):
         return self.comments.filter(is_approved=True)
 

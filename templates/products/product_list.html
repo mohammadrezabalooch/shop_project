@@ -4,18 +4,14 @@
 {% block title %}لیست محصولات{% endblock title %}
 
 {% block content %}
-<div class='container'>
 
-    <div class="row justify-content-center mb-5">
-        <div class='col-8'>
             <form action="{% url 'productsearch' %}" class='input-group'>
                 <input type="text" name="q" class='form-control' placeholder='به دنبال چه محصولی هستید؟'>
                 <button type="submit" class='btn btn-primary'>جستجو</button>
             </form>
-        </div>
-    </div>
+
     
-    {% for product in product_list %}
+    {% for product in page_obj %}
     {% if product.image %}
     <p>
         <img src="{{product.image.url}}" alt="{{product.title}}" width="400">
@@ -52,9 +48,6 @@
     <br><br>
     {% endfor %}
     
-    {% for post in page_obj %}
-    <p>{{ post.title }}</p>
-    {% endfor %}
     
     <div>
         <span>
@@ -74,5 +67,4 @@
     </span>
 </div>
 
-</div>
 {% endblock content %}
