@@ -11,6 +11,7 @@ from django.views.generic import FormView
 from django.contrib.auth import login
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
 
 # Create your views here.
 
@@ -31,7 +32,7 @@ class CustomLoginView(LoginView):
         send_mail(
             "کد ورود به وبسایت فروشگاه",
             f"کد ورود کاربر {user.username} {code} میباشد.",
-            "sstthh@gmail.com",
+            settings.EMAIL_HOST_USER,
             [user.email],
             fail_silently=False,
         )
