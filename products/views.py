@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Product
 from django.urls import reverse_lazy
 from comments.forms import CommentForm
@@ -27,22 +28,37 @@ class ProductDetail(DetailView):
         return context
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Product
     template_name = "products/product_create.html"
     fields = "__all__"
 
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
     template_name = "products/product_update.html"
     fields = ("name", "price", "category", "description", "image")
 
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
-class ProductDeleteView(DeleteView):
+
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     template_name = "products/product_delete.html"
     success_url = reverse_lazy("productlist")
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
 
 class ProductSearchView(ListView):
