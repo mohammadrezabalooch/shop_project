@@ -6,6 +6,9 @@ from .views import (
     ProductUpdateView,
     ProductDeleteView,
     ProductSearchView,
+    ProductListAPIView,
+    ProductDetailAPIView,
+    ProductSearchAPIView,
 )
 
 urlpatterns = [
@@ -15,4 +18,12 @@ urlpatterns = [
     path("edit/<int:pk>/", ProductUpdateView.as_view(), name="productupdate"),
     path("delete/<int:pk>", ProductDeleteView.as_view(), name="productdelete"),
     path("search/", ProductSearchView.as_view(), name="productsearch"),
+    #
+    # api urls
+    #
+    path("api/list/", ProductListAPIView.as_view(), name="apiproductlistcreate"),
+    path(
+        "api/detail/<int:pk>", ProductDetailAPIView.as_view(), name="apiproductDetail"
+    ),
+    path("api/search/", ProductSearchAPIView.as_view(), name="apiproductSearch"),
 ]

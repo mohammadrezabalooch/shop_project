@@ -6,6 +6,10 @@ from .models import Product
 from django.urls import reverse_lazy
 from comments.forms import CommentForm
 from django.contrib.contenttypes.models import ContentType
+from rest_framework import generics
+from .serializers import ProductSerilizer
+from rest_framework.permissions import IsAdminUser, AllowAny
+from .permissions import IsAdminOrReadOnly
 
 # Create your views here.
 
@@ -72,3 +76,33 @@ class ProductSearchView(ListView):
         context = super().get_context_data(**kwargs)
         context["searchword"] = self.request.GET.get("q")
         return context
+
+
+class ProductListAPIView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerilizer
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
+
+
+class ProductDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerilizer
+    permission_classes = [
+        IsAdminOrReadOnly,
+    ]
+
+
+class ProductSearchAPIView(generics.ListAPIView):
+
+    def get_queryset(self):
+        search = self.request.GET.get("q")
+        if search:
+            return Product.objects.filter(name__icontains=search)
+        return Product.objects.none()
+
+    serializer_class = ProductSerilizer
+    permission_classes = [
+        AllowAny,
+    ]
