@@ -13,6 +13,10 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 from comments.forms import CommentForm
 from django.contrib.contenttypes.models import ContentType
+from rest_framework import generics
+from .serializers import PostSerializer
+from .permissions import IsAuthorOrReadOnly, IsAuthor
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 
@@ -99,3 +103,38 @@ class AuthorListView(ListView):
         return author.articles.filter(status="p")
 
     context_object_name = "authorposts"
+
+
+class PostListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Post.objects.filter(status="p")
+    serializer_class = PostSerializer
+    permission_classes = [
+        IsAuthorOrReadOnly,
+    ]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user, status="d")
+
+
+class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.filter(status="p")
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthorOrReadOnly]
+
+
+class PostPreviewAPIView(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Post.objects.filter(Q(status="d") | Q(status="b"))
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthor]
+
+
+class AuthorListAPIView(generics.ListAPIView):
+    def get_queryset(self):
+        username = self.kwargs.get("username")
+        author = get_object_or_404(get_user_model(), username=username)
+
+        return author.articles.filter(status="p")
+
+    serializer_class = PostSerializer
+    permission_classes = [AllowAny]

@@ -7,6 +7,10 @@ from .views import (
     PostUpdateView,
     PostDeleteView,
     AuthorListView,
+    PostListCreateAPIView,
+    PostDetailAPIView,
+    PostPreviewAPIView,
+    AuthorListAPIView,
 )
 
 urlpatterns = [
@@ -17,4 +21,13 @@ urlpatterns = [
     path("edit/<int:pk>/", PostUpdateView.as_view(), name="postupdate"),
     path("delete/<int:pk>/", PostDeleteView.as_view(), name="postdelete"),
     path("author/<slug:username>/", AuthorListView.as_view(), name="authorlist"),
+    #
+    # api urls
+    #
+    path("api/", PostListCreateAPIView.as_view(), name="apipostlist"),
+    path("api/<int:pk>/", PostDetailAPIView.as_view(), name="apipostdetail"),
+    path("api/preview/<int:pk>/", PostPreviewAPIView.as_view(), name="apipostpreview"),
+    path(
+        "api/author/<slug:username>/", AuthorListAPIView.as_view(), name="apiauthorlist"
+    ),
 ]
