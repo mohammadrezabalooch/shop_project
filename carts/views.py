@@ -3,6 +3,10 @@ from django.views.generic import View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Cart, CartItem
 from products.models import Product
+from .serializers import CartSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 # Create your views here.
 
@@ -51,3 +55,50 @@ class CartDetailView(LoginRequiredMixin, TemplateView):
         cart, _ = Cart.objects.get_or_create(user=self.request.user)
         context["cart"] = cart
         return context
+
+
+class CartDetailAPIView(generics.RetrieveAPIView):
+    serializer_class = CartSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        return cart
+
+
+class CartAddAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CartSerializer
+    queryset = Product.objects.all()
+
+    def post(self, request, pk, *args, **kwargs):
+        item = self.get_object()
+        cart, _ = Cart.objects.get_or_create(user=self.request.user)
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, item=item)
+
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+        serializer = self.get_serializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CartDeleteAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CartSerializer
+    queryset = Product.objects.all()
+
+    def post(self, request, pk, *args, **kwargs):
+        item = self.get_object()
+        cart = get_object_or_404(Cart, user=self.request.user)
+        cart_item = CartItem.objects.get(cart=cart, item=item)
+
+        if cart_item.quantity == 1:
+            cart_item.delete()
+        else:
+            cart_item.quantity -= 1
+            cart_item.save()
+
+        serializer = self.get_serializer(cart)
+        return Response(serializer.data, status=status.HTTP_200_OK)

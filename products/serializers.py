@@ -12,5 +12,6 @@ class ProductSerilizer(serializers.ModelSerializer):
             "stock",
             "category",
             "image",
+            "id",
             # "comments",
         ]
