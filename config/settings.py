@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django.contrib.humanize",
+    "drf_spectacular",
     # local apps
     "accounts.apps.AccountsConfig",
     "products.apps.ProductsConfig",
@@ -165,5 +166,11 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
-    ]
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Shop API Project",
+    "DESCRIPTION": "A sample api for my shop project",
+    "VERSION": "1.0.0",
 }
