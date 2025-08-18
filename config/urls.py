@@ -27,6 +27,7 @@ urlpatterns = [
     path("carts/", include("carts.urls")),
     path("blog/", include("blog.urls")),
     path("comments/", include("comments.urls")),
+    path("api-auth/", include("rest_framework.urls")),
 ]
 
 if settings.DEBUG:
