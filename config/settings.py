@@ -38,8 +38,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # third-party apps
+    "django.contrib.sites",
+    # DRF
     "rest_framework",
+    "rest_framework.authtoken",
+    "dj_rest_auth",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth.registration",
+    # third-party apps
     "crispy_forms",
     "crispy_bootstrap5",
     "django.contrib.humanize",
@@ -167,6 +175,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
+    ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 SPECTACULAR_SETTINGS = {
@@ -174,3 +185,8 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "A sample api for my shop project",
     "VERSION": "1.0.0",
 }
+
+SITE_ID = 1
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = "access"
+JWT_AUTH_REFRESH_COOKIE = "refresh"

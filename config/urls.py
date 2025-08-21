@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from dj_rest_auth.views import PasswordResetConfirmView
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -32,7 +33,17 @@ urlpatterns = [
     path("carts/", include("carts.urls")),
     path("blog/", include("blog.urls")),
     path("comments/", include("comments.urls")),
-    path("api-auth/", include("rest_framework.urls")),
+    #
+    # path("api-auth/", include("rest_framework.urls")),
+    path("api/rest-auth/", include("dj_rest_auth.urls")),
+    path("api/rest-auth/registration/", include("dj_rest_auth.registration.urls")),
+    path(
+        "api/rest-auth/password/reset/confirm/<uidb64>/<token>/",
+        PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    #
+    #
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/redoc/",
